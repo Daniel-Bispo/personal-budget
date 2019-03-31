@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Document(value = "trialbalances")
+@Document(value = "trialbalance")
 public class TrialBalance {
 
     @Id

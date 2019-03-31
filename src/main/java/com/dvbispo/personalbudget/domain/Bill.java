@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Document(value = "bills")
+@Document(value = "bill")
 public class Bill implements Serializable {
 
     private static final long serialVersionUID = 1L;

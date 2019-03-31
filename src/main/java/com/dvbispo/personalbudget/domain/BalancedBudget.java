@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Document(collection = "balancedbudgets")
+@Document(collection = "balancedbudget")
 public class BalancedBudget {
 
     @Id
