@@ -1,17 +1,28 @@
 package com.dvbispo.personalbudget.domain;
 
 import com.dvbispo.personalbudget.domain.enums.BillType;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class Bill {
+@Document(value = "bills")
+public class Bill implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+    @Id
     private int id;
     private String name;
     private int day;
     private Double value;
     private BillType billType;
+
+    @DBRef(lazy = true)
     private List<String> notes = new ArrayList<>();
 
     public Bill() {
@@ -74,14 +85,15 @@ public class Bill {
     }
 
     @Override
-    public String toString() {
-        return "Bill{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", date=" + day +
-                ", value=" + value +
-                ", billType=" + billType +
-                ", notes=" + notes +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Bill)) return false;
+        Bill bill = (Bill) o;
+        return getId() == bill.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

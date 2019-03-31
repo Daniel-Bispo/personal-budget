@@ -1,16 +1,25 @@
 package com.dvbispo.personalbudget.domain;
 
 import com.dvbispo.personalbudget.domain.enums.BillType;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@Document(value = "trialbalances")
 public class TrialBalance {
+
+    @Id
     private int id;
     private int month;
 
+    @DBRef(lazy = true)
     private List<Bill> bills = new ArrayList<>();
 
+    @DBRef(lazy = true)
     private List<String> notes = new ArrayList<>();
 
     public TrialBalance() {
@@ -68,13 +77,15 @@ public class TrialBalance {
     }
 
     @Override
-    public String toString() {
-        return "TrialBalance{" +
-                "id=" + id +
-                ", month=" + month +
-                ", balance=" + getBalance() +
-                ", bills=" + bills +
-                ", notes=" + notes +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TrialBalance)) return false;
+        TrialBalance that = (TrialBalance) o;
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

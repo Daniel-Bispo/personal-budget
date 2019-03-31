@@ -1,13 +1,24 @@
 package com.dvbispo.personalbudget.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@Document(collection = "balancedbudgets")
 public class BalancedBudget {
 
+    @Id
     private int id;
     private int year;
+
+    @DBRef(lazy = true)
     private List<TrialBalance> trialBalances = new ArrayList<>();
+
+    @DBRef(lazy = true)
     private List<String> notes = new ArrayList<>();
 
     public BalancedBudget(){
@@ -59,12 +70,15 @@ public class BalancedBudget {
     }
 
     @Override
-    public String toString() {
-        return "BalancedBudget{" +
-                "id=" + id +
-                ", year=" + year +
-                ", balance=" + getBalance() +
-                ", notes=" + notes +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BalancedBudget)) return false;
+        BalancedBudget that = (BalancedBudget) o;
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
