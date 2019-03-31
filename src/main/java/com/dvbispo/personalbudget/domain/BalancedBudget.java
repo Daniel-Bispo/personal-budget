@@ -11,13 +11,11 @@ public class BalancedBudget {
     private List<String> notes = new ArrayList<>();
 
     public BalancedBudget(){
-        addTrialBalances();
     }
 
     public BalancedBudget(int id, int year) {
         this.id = id;
         this.year = year;
-        addTrialBalances();
     }
 
     public int getId() {
@@ -52,13 +50,21 @@ public class BalancedBudget {
         this.notes.add(notes);
     }
 
-    private void addTrialBalances(){
-        for(int i =1; i <= 12; i++){
-            trialBalances.add(new TrialBalance(i));
-        }
+    private void addTrialBalance(TrialBalance trialBalance){
+            trialBalances.add(trialBalance);
     }
 
-    public Double getcBalance(){
+    public Double getBalance(){
         return trialBalances.stream().mapToDouble(x -> x.getBalance()).sum();
+    }
+
+    @Override
+    public String toString() {
+        return "BalancedBudget{" +
+                "id=" + id +
+                ", year=" + year +
+                ", balance=" + getBalance() +
+                ", notes=" + notes +
+                '}';
     }
 }

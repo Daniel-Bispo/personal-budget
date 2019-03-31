@@ -3,28 +3,26 @@ package com.dvbispo.personalbudget.domain;
 import com.dvbispo.personalbudget.domain.enums.BillType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Bill {
 
     private int id;
     private String name;
-    private Date date;
+    private int day;
     private Double value;
     private BillType billType;
-    private List<String> notes;
+    private List<String> notes = new ArrayList<>();
 
     public Bill() {
     }
 
-    public Bill(int id, String name, Date date, Double value, BillType billType) {
+    public Bill(int id, String name, int day, Double value, BillType billType) {
         this.id = id;
         this.name = name;
-        this.date = date;
+        this.day = day;
         this.value = value;
         this.billType = billType;
-        this.notes = new ArrayList<>();
     }
 
     public int getId() {
@@ -43,12 +41,12 @@ public class Bill {
         this.name = name;
     }
 
-    public Date getDate() {
-        return date;
+    public int getDate() {
+        return day;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(int day) {
+        this.day = day;
     }
 
     public Double getValue() {
@@ -71,7 +69,7 @@ public class Bill {
         return notes;
     }
 
-    public void setNotes(String note) {
+    public void addNotes(String note) {
         this.notes.add(note);
     }
 
@@ -80,7 +78,7 @@ public class Bill {
         return "Bill{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", date=" + date +
+                ", date=" + day +
                 ", value=" + value +
                 ", billType=" + billType +
                 ", notes=" + notes +

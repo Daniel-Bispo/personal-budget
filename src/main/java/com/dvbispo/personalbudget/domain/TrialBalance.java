@@ -2,27 +2,23 @@ package com.dvbispo.personalbudget.domain;
 
 import com.dvbispo.personalbudget.domain.enums.BillType;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TrialBalance {
     private int id;
     private int month;
-    private Double totalDebt = 0.0;
-    private Double totalCredit = 0.0;
-    private Double balance = 0.0;
 
-    private List<String> notes = new ArrayList<>();;
+    private List<Bill> bills = new ArrayList<>();
 
-    private List<Bill> bills = new ArrayList<>();;
+    private List<String> notes = new ArrayList<>();
 
     public TrialBalance() {
     }
 
-    public TrialBalance(int id) {
+    public TrialBalance(int id, int month) {
         this.id = id;
-        this.month = LocalDate.now().getMonthValue();
+        this.month = month;
     }
 
     public int getId() {
@@ -35,37 +31,6 @@ public class TrialBalance {
 
     public int getMonth() {
         return month;
-    }
-
-    public Double getTotalDebt() {
-        return totalDebt;
-    }
-
-    private void sumTotalDebt() {
-
-        totalDebt = bills.stream()
-                .filter(x -> x.getBillType() == BillType.DEBT)
-                .mapToDouble(x -> x.getValue())
-                .sum();
-    }
-
-    public Double getTotalCredit() {
-        return totalCredit;
-    }
-
-    private void sumTotalCredit() {
-        totalCredit = bills.stream()
-                .filter(x -> x.getBillType() == BillType.CREDIT)
-                .mapToDouble(x -> x.getValue())
-                .sum();
-    }
-
-    public Double getBalance() {
-        return balance;
-    }
-
-    private void setBalance() {
-        this.balance = totalDebt - totalCredit;
     }
 
     public List<String> getNotes() {
@@ -82,9 +47,24 @@ public class TrialBalance {
 
     public void addBill(Bill bill) {
         this.bills.add(bill);
-        sumTotalDebt();
-        sumTotalCredit();
-        setBalance();
+    }
+
+    public Double getTotalDebt() {
+        return bills.stream()
+                .filter(x -> x.getBillType() == BillType.DEBT)
+                .mapToDouble(x -> x.getValue())
+                .sum();
+    }
+
+    public Double getTotalCredit() {
+        return bills.stream()
+                .filter(x -> x.getBillType() == BillType.CREDIT)
+                .mapToDouble(x -> x.getValue())
+                .sum();
+    }
+
+    public Double getBalance() {
+        return getTotalCredit() - getTotalDebt();
     }
 
     @Override
@@ -92,11 +72,9 @@ public class TrialBalance {
         return "TrialBalance{" +
                 "id=" + id +
                 ", month=" + month +
-                ", totalDebt=" + totalDebt +
-                ", totalCredit=" + totalCredit +
-                ", balance=" + balance +
-                ", notes=" + notes +
+                ", balance=" + getBalance() +
                 ", bills=" + bills +
+                ", notes=" + notes +
                 '}';
     }
 }
