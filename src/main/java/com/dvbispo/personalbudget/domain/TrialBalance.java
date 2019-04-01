@@ -2,24 +2,23 @@ package com.dvbispo.personalbudget.domain;
 
 import com.dvbispo.personalbudget.domain.enums.BillType;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Document(value = "trialbalance")
+@Document(collection = "trialbalance")
 public class TrialBalance {
 
     @Id
     private int id;
     private int month;
 
-    @DBRef(lazy = true)
+    //@DBRef(lazy = true)
     private List<Bill> bills = new ArrayList<>();
 
-    @DBRef(lazy = true)
+    //@DBRef(lazy = true)
     private List<String> notes = new ArrayList<>();
 
     public TrialBalance() {

@@ -2,7 +2,6 @@ package com.dvbispo.personalbudget.domain;
 
 import com.dvbispo.personalbudget.domain.enums.BillType;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Document(value = "bill")
+@Document(collection = "bill")
 public class Bill implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,7 +21,7 @@ public class Bill implements Serializable {
     private Double value;
     private BillType billType;
 
-    @DBRef(lazy = true)
+    //@DBRef(lazy = true)
     private List<String> notes = new ArrayList<>();
 
     public Bill() {

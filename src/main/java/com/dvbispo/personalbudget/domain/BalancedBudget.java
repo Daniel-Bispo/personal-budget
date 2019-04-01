@@ -1,7 +1,6 @@
 package com.dvbispo.personalbudget.domain;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -15,10 +14,10 @@ public class BalancedBudget {
     private int id;
     private int year;
 
-    @DBRef(lazy = true)
+    //@DBRef(lazy = true)
     private List<TrialBalance> trialBalances = new ArrayList<>();
 
-    @DBRef(lazy = true)
+    //@DBRef(lazy = true)
     private List<String> notes = new ArrayList<>();
 
     public BalancedBudget(){
