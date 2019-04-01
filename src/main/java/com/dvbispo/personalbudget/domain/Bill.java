@@ -16,7 +16,7 @@ public class Bill implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private int id;
+    private String id;
     private String name;
     private int day;
     private Double value;
@@ -28,7 +28,7 @@ public class Bill implements Serializable {
     public Bill() {
     }
 
-    public Bill(int id, String name, int day, Double value, BillType billType) {
+    public Bill(String id, String name, int day, Double value, BillType billType) {
         this.id = id;
         this.name = name;
         this.day = day;
@@ -36,11 +36,11 @@ public class Bill implements Serializable {
         this.billType = billType;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
