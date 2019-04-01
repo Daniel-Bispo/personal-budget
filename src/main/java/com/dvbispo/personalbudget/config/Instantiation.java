@@ -1,8 +1,10 @@
 package com.dvbispo.personalbudget.config;
 
 import com.dvbispo.personalbudget.domain.Bill;
+import com.dvbispo.personalbudget.domain.TrialBalance;
 import com.dvbispo.personalbudget.domain.enums.BillType;
 import com.dvbispo.personalbudget.repositories.BillRepository;
+import com.dvbispo.personalbudget.repositories.TrialBalanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +16,8 @@ public class Instantiation implements CommandLineRunner {
 
     @Autowired
     private BillRepository billRepository;
+    @Autowired
+    private TrialBalanceRepository trialBalanceRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -28,6 +32,16 @@ public class Instantiation implements CommandLineRunner {
         Bill bill5 = new Bill(null, "Dividendos", 10, 456.19, BillType.DEBT);
         bill5.addNotes("FESA4");
 
-        billRepository.saveAll(Arrays.asList(bill1,bill2,bill3,bill4,bill5));
+
+        TrialBalance trialBalance1 = new TrialBalance(null, 4);
+
+        trialBalance1.addBill(bill1);
+        trialBalance1.addBill(bill2);
+        trialBalance1.addBill(bill3);
+        trialBalance1.addBill(bill4);
+        trialBalance1.addBill(bill5);
+
+        billRepository.saveAll(Arrays.asList(bill1, bill2, bill3, bill4, bill5));
+        trialBalanceRepository.saveAll(Arrays.asList(trialBalance1));
     }
 }

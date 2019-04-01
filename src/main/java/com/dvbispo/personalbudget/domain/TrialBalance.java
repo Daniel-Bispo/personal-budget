@@ -2,6 +2,7 @@ package com.dvbispo.personalbudget.domain;
 
 import com.dvbispo.personalbudget.domain.enums.BillType;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -12,28 +13,27 @@ import java.util.Objects;
 public class TrialBalance {
 
     @Id
-    private int id;
+    private String id;
     private int month;
 
-    //@DBRef(lazy = true)
+    @DBRef(lazy = true)
     private List<Bill> bills = new ArrayList<>();
 
-    //@DBRef(lazy = true)
     private List<String> notes = new ArrayList<>();
 
     public TrialBalance() {
     }
 
-    public TrialBalance(int id, int month) {
+    public TrialBalance(String id, int month) {
         this.id = id;
         this.month = month;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

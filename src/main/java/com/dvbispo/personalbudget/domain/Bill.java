@@ -17,20 +17,19 @@ public class Bill implements Serializable {
     @Id
     private String id;
     private String name;
-    private int day;
+    private int dayOfMonth;
     private Double value;
     private BillType billType;
 
-    //@DBRef(lazy = true)
     private List<String> notes = new ArrayList<>();
 
     public Bill() {
     }
 
-    public Bill(String id, String name, int day, Double value, BillType billType) {
+    public Bill(String id, String name, int dayOfMonth, Double value, BillType billType) {
         this.id = id;
         this.name = name;
-        this.day = day;
+        this.dayOfMonth = dayOfMonth;
         this.value = value;
         this.billType = billType;
     }
@@ -52,11 +51,11 @@ public class Bill implements Serializable {
     }
 
     public int getDate() {
-        return day;
+        return dayOfMonth;
     }
 
-    public void setDate(int day) {
-        this.day = day;
+    public void setDate(int dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 
     public Double getValue() {
