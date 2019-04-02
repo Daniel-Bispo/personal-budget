@@ -1,13 +1,12 @@
-package com.dvbispo.personalbudget.domain;
+package com.dvbispo.personalbudget.entity;
 
-import com.dvbispo.personalbudget.domain.enums.BillType;
+import com.dvbispo.personalbudget.entity.enums.BillType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

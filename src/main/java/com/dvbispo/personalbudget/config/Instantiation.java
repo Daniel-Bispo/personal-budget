@@ -1,12 +1,12 @@
 package com.dvbispo.personalbudget.config;
 
-import com.dvbispo.personalbudget.domain.BalancedBudget;
-import com.dvbispo.personalbudget.domain.Bill;
-import com.dvbispo.personalbudget.domain.TrialBalance;
-import com.dvbispo.personalbudget.domain.enums.BillType;
-import com.dvbispo.personalbudget.repositories.BalancedBudgetRepository;
-import com.dvbispo.personalbudget.repositories.BillRepository;
-import com.dvbispo.personalbudget.repositories.TrialBalanceRepository;
+import com.dvbispo.personalbudget.entity.BalancedBudget;
+import com.dvbispo.personalbudget.entity.Bill;
+import com.dvbispo.personalbudget.entity.TrialBalance;
+import com.dvbispo.personalbudget.entity.enums.BillType;
+import com.dvbispo.personalbudget.dao.BalancedBudgetRepository;
+import com.dvbispo.personalbudget.dao.BillRepository;
+import com.dvbispo.personalbudget.dao.TrialBalanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
