@@ -1,8 +1,11 @@
 package com.dvbispo.personalbudget.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,28 +14,27 @@ import java.util.Objects;
 public class BalancedBudget {
 
     @Id
-    private int id;
+    private String id;
     private int year;
 
-    //@DBRef(lazy = true)
+    @DBRef(lazy = true)
     private List<TrialBalance> trialBalances = new ArrayList<>();
 
-    //@DBRef(lazy = true)
     private List<String> notes = new ArrayList<>();
 
     public BalancedBudget(){
     }
 
-    public BalancedBudget(int id, int year) {
+    public BalancedBudget(String id, int year) {
         this.id = id;
         this.year = year;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -48,8 +50,8 @@ public class BalancedBudget {
         return trialBalances;
     }
 
-    public void addTrialBalances(TrialBalance trialBalances) {
-        this.trialBalances.add(trialBalances);
+    public void addTrialBalance(TrialBalance trialBalance) {
+        this.trialBalances.add(trialBalance);
     }
 
     public List<String> getNotes() {
@@ -60,13 +62,13 @@ public class BalancedBudget {
         this.notes.add(notes);
     }
 
-    private void addTrialBalance(TrialBalance trialBalance){
-            trialBalances.add(trialBalance);
+    public Double getBalance(){
+
+        BigDecimal calc = new BigDecimal(trialBalances.stream().mapToDouble(x -> x.getBalance()).sum(),
+                            new MathContext(10));
+        return calc.doubleValue();
     }
 
-    public Double getBalance(){
-        return trialBalances.stream().mapToDouble(x -> x.getBalance()).sum();
-    }
 
     @Override
     public boolean equals(Object o) {

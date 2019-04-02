@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -58,21 +61,32 @@ public class TrialBalance {
     }
 
     public Double getTotalDebt() {
-        return bills.stream()
+
+        BigDecimal cal = new BigDecimal(bills.stream()
                 .filter(x -> x.getBillType() == BillType.DEBT)
                 .mapToDouble(x -> x.getValue())
-                .sum();
+                .sum(),new MathContext(10));
+
+        return cal.doubleValue();
     }
 
     public Double getTotalCredit() {
-        return bills.stream()
-                .filter(x -> x.getBillType() == BillType.CREDIT)
-                .mapToDouble(x -> x.getValue())
-                .sum();
+
+        BigDecimal cal = new BigDecimal(bills.stream()
+                            .filter(x -> x.getBillType() == BillType.CREDIT)
+                            .mapToDouble(x -> x.getValue())
+                            .sum(),new MathContext(10));
+
+        return cal.doubleValue();
     }
 
+
     public Double getBalance() {
-        return getTotalCredit() - getTotalDebt();
+
+        BigDecimal cal = new BigDecimal(getTotalDebt() - getTotalCredit(),
+                                new MathContext(10));
+
+        return cal.doubleValue();
     }
 
     @Override
