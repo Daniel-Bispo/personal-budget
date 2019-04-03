@@ -1,8 +1,10 @@
 package com.dvbispo.personalbudget.dao;
 
 import com.dvbispo.personalbudget.entity.TrialBalance;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.rest.core.annotation.RestResource;
 
-public interface TrialBalanceRepository extends MongoRepository<TrialBalance, String> {
+@RestResource(path = "trialbalances")
+public interface TrialBalanceRepository extends CrudRepository<TrialBalance, String> {
 
 }
