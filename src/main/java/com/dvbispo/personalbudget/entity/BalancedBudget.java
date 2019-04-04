@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Document(collection = "balancedbudget")
+@Document
 public class BalancedBudget {
 
     @Id
     private String id;
     private int year;
 
-    @DBRef(lazy = true)
+    @DBRef
     private List<TrialBalance> trialBalances = new ArrayList<>();
 
     private List<String> notes = new ArrayList<>();

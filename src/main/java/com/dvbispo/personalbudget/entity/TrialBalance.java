@@ -7,18 +7,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Document(collection = "trialbalance")
+@Document
 public class TrialBalance {
 
     @Id
     private String id;
+    private int year;
     private int month;
 
-    @DBRef(lazy = true)
+    @DBRef
     private List<Bill> bills = new ArrayList<>();
 
     private List<String> notes = new ArrayList<>();
@@ -26,8 +28,9 @@ public class TrialBalance {
     public TrialBalance() {
     }
 
-    public TrialBalance(String id, int month) {
+    public TrialBalance(String id, int year, int month) {
         this.id = id;
+        this.year = year;
         this.month = month;
     }
 
@@ -39,16 +42,16 @@ public class TrialBalance {
         this.id = id;
     }
 
-    public int getMonth() {
-        return month;
+    public void setYear(int year) {
+        this.year = year;
     }
 
-    public List<String> getNotes() {
-        return notes;
+    public void setMonth(int month) {
+        this.month = month;
     }
 
-    public void addNote(String note) {
-        this.notes.add(note);
+    public YearMonth getYearMonth() {
+        return YearMonth.of(year,month);
     }
 
     public List<Bill> getBills() {
@@ -57,6 +60,14 @@ public class TrialBalance {
 
     public void addBill(Bill bill) {
         this.bills.add(bill);
+    }
+
+    public List<String> getNotes() {
+        return notes;
+    }
+
+    public void addNote(String note) {
+        this.notes.add(note);
     }
 
     public Double getTotalDebt() {

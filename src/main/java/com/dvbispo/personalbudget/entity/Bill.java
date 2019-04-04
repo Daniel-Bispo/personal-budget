@@ -5,11 +5,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Document(collection = "bill")
+@Document
 public class Bill implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -17,21 +18,27 @@ public class Bill implements Serializable {
     @Id
     private String id;
     private String name;
-    private int dayOfMonth;
+    private int dueYear;
+    private int dueMonth;
+    private int dueDay;
     private Double value;
     private BillType billType;
+    private Boolean payed;
 
     private List<String> notes = new ArrayList<>();
 
     public Bill() {
     }
 
-    public Bill(String id, String name, int dayOfMonth, Double value, BillType billType) {
+    public Bill(String id, String name, int dueYear, int dueMonth, int dueDay, Double value, BillType billType) {
         this.id = id;
         this.name = name;
-        this.dayOfMonth = dayOfMonth;
+        this.dueYear = dueYear;
+        this.dueMonth = dueMonth;
+        this.dueDay = dueDay;
         this.value = value;
         this.billType = billType;
+        this.payed = false;
     }
 
     public String getId() {
@@ -50,12 +57,20 @@ public class Bill implements Serializable {
         this.name = name;
     }
 
-    public int getDate() {
-        return dayOfMonth;
+    public LocalDate getDate() {
+        return  LocalDate.of(dueYear, dueMonth, dueDay);
     }
 
-    public void setDate(int dayOfMonth) {
-        this.dayOfMonth = dayOfMonth;
+    public void setDueYear(int dueYear) {
+        this.dueYear = dueYear;
+    }
+
+    public void setDueMonth(int dueMonth) {
+        this.dueMonth = dueMonth;
+    }
+
+    public void setDueDay(int dueDay) {
+        this.dueDay = dueDay;
     }
 
     public Double getValue() {
@@ -72,6 +87,29 @@ public class Bill implements Serializable {
 
     public void setBillType(BillType billType) {
         this.billType = billType;
+    }
+
+    public void setPayed(Boolean payed) {
+        this.payed = payed;
+    }
+
+    public String getStatus(){
+
+        LocalDate dateToday = LocalDate.now();
+        LocalDate dueDate = getDate();
+
+        if(payed) {
+            return "Payed";
+        }
+        else if(!payed && dateToday.isAfter(dueDate)){
+            return "Overdue";
+        }
+        else if(!payed && dateToday.isAfter(dueDate.minusDays(3))){
+            return "Closing";
+        }
+        else{
+            return "Unpaid";
+        }
     }
 
     public List<String> getNotes() {
