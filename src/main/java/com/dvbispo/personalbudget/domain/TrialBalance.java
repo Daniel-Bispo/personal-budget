@@ -1,10 +1,11 @@
-package com.dvbispo.personalbudget.entity;
+package com.dvbispo.personalbudget.domain;
 
-import com.dvbispo.personalbudget.entity.enums.BillType;
+import com.dvbispo.personalbudget.domain.enums.BillType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.YearMonth;
@@ -17,8 +18,14 @@ public class TrialBalance {
 
     @Id
     private String id;
-    private int year;
-    private int month;
+    @NotNull
+    private Integer year;
+    @NotNull
+    private Integer month;
+
+    private Double totalDebt;
+    private Double totalCredit;
+    private Double balance;
 
     @DBRef
     private List<Bill> bills = new ArrayList<>();
@@ -28,7 +35,7 @@ public class TrialBalance {
     public TrialBalance() {
     }
 
-    public TrialBalance(String id, int year, int month) {
+    public TrialBalance(String id, Integer year, Integer month) {
         this.id = id;
         this.year = year;
         this.month = month;
@@ -42,16 +49,60 @@ public class TrialBalance {
         this.id = id;
     }
 
-    public void setYear(int year) {
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
         this.year = year;
     }
 
-    public void setMonth(int month) {
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
         this.month = month;
     }
 
-    public YearMonth getYearMonth() {
-        return YearMonth.of(year,month);
+    public Double getTotalDebt() {
+        return totalDebt;
+    }
+
+    public void setTotalDebt() {
+
+        BigDecimal cal = new BigDecimal(bills.stream()
+                .filter(x -> x.getBillType() == BillType.DEBT)
+                .mapToDouble(x -> x.getValue())
+                .sum(),new MathContext(10));
+
+        this.totalDebt =  cal.doubleValue();
+    }
+
+    public Double getTotalCredit() {
+        return totalCredit;
+    }
+
+    public void setTotalCredit() {
+
+        BigDecimal cal = new BigDecimal(bills.stream()
+                .filter(x -> x.getBillType() == BillType.CREDIT)
+                .mapToDouble(x -> x.getValue())
+                .sum(),new MathContext(10));
+
+        this.totalCredit = cal.doubleValue();
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance() {
+
+        BigDecimal cal = new BigDecimal(getTotalDebt() - getTotalCredit(),
+                new MathContext(10));
+
+        this.balance = cal.doubleValue();
     }
 
     public List<Bill> getBills() {
@@ -68,35 +119,6 @@ public class TrialBalance {
 
     public void addNote(String note) {
         this.notes.add(note);
-    }
-
-    public Double getTotalDebt() {
-
-        BigDecimal cal = new BigDecimal(bills.stream()
-                .filter(x -> x.getBillType() == BillType.DEBT)
-                .mapToDouble(x -> x.getValue())
-                .sum(),new MathContext(10));
-
-        return cal.doubleValue();
-    }
-
-    public Double getTotalCredit() {
-
-        BigDecimal cal = new BigDecimal(bills.stream()
-                            .filter(x -> x.getBillType() == BillType.CREDIT)
-                            .mapToDouble(x -> x.getValue())
-                            .sum(),new MathContext(10));
-
-        return cal.doubleValue();
-    }
-
-
-    public Double getBalance() {
-
-        BigDecimal cal = new BigDecimal(getTotalDebt() - getTotalCredit(),
-                                new MathContext(10));
-
-        return cal.doubleValue();
     }
 
     @Override

@@ -1,9 +1,10 @@
-package com.dvbispo.personalbudget.entity;
+package com.dvbispo.personalbudget.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
@@ -15,7 +16,8 @@ public class BalancedBudget {
 
     @Id
     private String id;
-    private int year;
+    @NotNull
+    private Integer year;
 
     @DBRef
     private List<TrialBalance> trialBalances = new ArrayList<>();
@@ -25,7 +27,7 @@ public class BalancedBudget {
     public BalancedBudget(){
     }
 
-    public BalancedBudget(String id, int year) {
+    public BalancedBudget(String id, Integer year) {
         this.id = id;
         this.year = year;
     }
@@ -38,11 +40,11 @@ public class BalancedBudget {
         this.id = id;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 

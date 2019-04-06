@@ -1,4 +1,4 @@
-package com.dvbispo.personalbudget.entity.enums;
+package com.dvbispo.personalbudget.domain.enums;
 
 public enum BillType {
 

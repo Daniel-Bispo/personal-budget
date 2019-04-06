@@ -1,9 +1,10 @@
-package com.dvbispo.personalbudget.entity;
+package com.dvbispo.personalbudget.domain;
 
-import com.dvbispo.personalbudget.entity.enums.BillType;
+import com.dvbispo.personalbudget.domain.enums.BillType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,20 +18,27 @@ public class Bill implements Serializable {
 
     @Id
     private String id;
+    @NotNull
     private String name;
-    private int dueYear;
-    private int dueMonth;
-    private int dueDay;
+    @NotNull
+    private Integer dueYear;
+    @NotNull
+    private Integer dueMonth;
+    @NotNull
+    private Integer dueDay;
+    @NotNull
     private Double value;
+    @NotNull
     private BillType billType;
     private Boolean payed;
+    private String status;
 
     private List<String> notes = new ArrayList<>();
 
     public Bill() {
     }
 
-    public Bill(String id, String name, int dueYear, int dueMonth, int dueDay, Double value, BillType billType) {
+    public Bill(String id, String name, Integer dueYear, Integer dueMonth, Integer dueDay, Double value, BillType billType) {
         this.id = id;
         this.name = name;
         this.dueYear = dueYear;
@@ -57,19 +65,27 @@ public class Bill implements Serializable {
         this.name = name;
     }
 
-    public LocalDate getDate() {
-        return  LocalDate.of(dueYear, dueMonth, dueDay);
+    public Integer getDueYear() {
+        return dueYear;
     }
 
-    public void setDueYear(int dueYear) {
+    public void setDueYear(Integer dueYear) {
         this.dueYear = dueYear;
     }
 
-    public void setDueMonth(int dueMonth) {
+    public Integer getDueMonth() {
+        return dueMonth;
+    }
+
+    public void setDueMonth(Integer dueMonth) {
         this.dueMonth = dueMonth;
     }
 
-    public void setDueDay(int dueDay) {
+    public Integer getDueDay() {
+        return dueDay;
+    }
+
+    public void setDueDay(Integer dueDay) {
         this.dueDay = dueDay;
     }
 
@@ -89,27 +105,35 @@ public class Bill implements Serializable {
         this.billType = billType;
     }
 
+    public Boolean getPayed() {
+        return payed;
+    }
+
     public void setPayed(Boolean payed) {
         this.payed = payed;
     }
 
-    public String getStatus(){
+    public void setStatus(){
 
         LocalDate dateToday = LocalDate.now();
-        LocalDate dueDate = getDate();
+        LocalDate dueDate = LocalDate.of(dueYear, dueMonth, dueDay);
 
         if(payed) {
-            return "Payed";
+            this.status = "Payed";
         }
-        else if(!payed && dateToday.isAfter(dueDate)){
-            return "Overdue";
+        else if(!payed && dateToday.isAfter(dueDate) && billType.equals(BillType.CREDIT)){
+            this.status = "Overdue";
         }
-        else if(!payed && dateToday.isAfter(dueDate.minusDays(3))){
-            return "Closing";
+        else if(!payed && dateToday.isAfter(dueDate.minusDays(3)) && billType.equals(BillType.CREDIT)){
+            this.status = "Closing";
         }
         else{
-            return "Unpaid";
+            this.status = "Unpaid";
         }
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public List<String> getNotes() {

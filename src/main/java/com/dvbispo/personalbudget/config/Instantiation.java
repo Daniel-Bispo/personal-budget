@@ -1,12 +1,15 @@
 package com.dvbispo.personalbudget.config;
 
-import com.dvbispo.personalbudget.dao.BalancedBudgetRepository;
-import com.dvbispo.personalbudget.dao.BillRepository;
-import com.dvbispo.personalbudget.dao.TrialBalanceRepository;
-import com.dvbispo.personalbudget.entity.BalancedBudget;
-import com.dvbispo.personalbudget.entity.Bill;
-import com.dvbispo.personalbudget.entity.TrialBalance;
-import com.dvbispo.personalbudget.entity.enums.BillType;
+import com.dvbispo.personalbudget.domain.BalancedBudget;
+import com.dvbispo.personalbudget.domain.Bill;
+import com.dvbispo.personalbudget.domain.TrialBalance;
+import com.dvbispo.personalbudget.domain.enums.BillType;
+import com.dvbispo.personalbudget.repository.BalancedBudgetRepository;
+import com.dvbispo.personalbudget.repository.BillRepository;
+import com.dvbispo.personalbudget.repository.TrialBalanceRepository;
+import com.dvbispo.personalbudget.service.BalancedBudgetService;
+import com.dvbispo.personalbudget.service.BillService;
+import com.dvbispo.personalbudget.service.TrialBalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -26,24 +29,24 @@ public class Instantiation implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        balancedBudgetRepository.deleteAll();
-        trialBalanceRepository.deleteAll();
         billRepository.deleteAll();
+        trialBalanceRepository.deleteAll();
+        balancedBudgetRepository.deleteAll();
 
-        Bill bill1 = new Bill(null, "Salário",2019,4,5, 4763.65, BillType.DEBT);
+        Bill bill1 = new Bill(null, "Salário",2019,4,5, 4763.65, BillType.DEBT,true);
         bill1.addNotes("Desconto da farmácia em folha");
-        Bill bill2 = new Bill(null, "Conta de luz",2019,4,11, 56.34, BillType.CREDIT);
-        Bill bill3 = new Bill(null, "Internet",2019,04, 3, 136.56, BillType.CREDIT);
-        Bill bill4 = new Bill(null, "Combustível",2019,04, 6, 118.78, BillType.CREDIT);
-        Bill bill5 = new Bill(null, "Dividendos",2019,04, 7, 456.19, BillType.DEBT);
+        Bill bill2 = new Bill(null, "Conta de luz",2019,4,11, 56.34, BillType.CREDIT, false);
+        Bill bill3 = new Bill(null, "Internet",2019,04, 3, 136.56, BillType.CREDIT, false);
+        Bill bill4 = new Bill(null, "Combustível",2019,04, 6, 118.78, BillType.CREDIT, true);
+        Bill bill5 = new Bill(null, "Dividendos",2019,04, 7, 456.19, BillType.DEBT, true);
         bill5.addNotes("FESA4");
 
-        Bill bill6 = new Bill(null, "Salário",2019,5, 5, 5782.46, BillType.DEBT);
+        Bill bill6 = new Bill(null, "Salário",2019,5, 5, 5782.46, BillType.DEBT, false);
         bill6.addNotes("Desconto da farmácia em folha");
-        Bill bill7 = new Bill(null, "Conta de luz", 2019,5,11, 78.23, BillType.CREDIT);
-        Bill bill8 = new Bill(null, "Internet", 2019,5,3, 142.35, BillType.CREDIT);
-        Bill bill9 = new Bill(null, "Combustível", 2019,5,22, 133.88, BillType.CREDIT);
-        Bill bill10 = new Bill(null, "Dividendos", 2019,5,17, 1456.19, BillType.DEBT);
+        Bill bill7 = new Bill(null, "Conta de luz", 2019,5,11, 78.23, BillType.CREDIT, false);
+        Bill bill8 = new Bill(null, "Internet", 2019,5,3, 142.35, BillType.CREDIT, false);
+        Bill bill9 = new Bill(null, "Combustível", 2019,5,22, 133.88, BillType.CREDIT, false);
+        Bill bill10 = new Bill(null, "Dividendos", 2019,5,17, 1456.19, BillType.DEBT, false);
         bill10.addNotes("TRPL4");
 
 
@@ -70,11 +73,8 @@ public class Instantiation implements CommandLineRunner {
 
         billRepository.saveAll(Arrays.asList(bill1, bill2, bill3, bill4, bill5, bill6, bill7, bill8, bill9, bill10));
         trialBalanceRepository.saveAll(Arrays.asList(trialBalance1, trialBalance2));
-
-
-
-        billRepository.saveAll(Arrays.asList(bill1));
-        trialBalanceRepository.saveAll(Arrays.asList(trialBalance1));
         balancedBudgetRepository.saveAll(Arrays.asList(balancedBudget1));
+
+
     }
 }
