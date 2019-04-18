@@ -3,6 +3,7 @@ package com.dvbispo.personalbudget.resource;
 import com.dvbispo.personalbudget.domain.Bill;
 import com.dvbispo.personalbudget.domain.TrialBalance;
 import com.dvbispo.personalbudget.dto.BillDTO;
+import com.dvbispo.personalbudget.repository.TrialBalanceRepository;
 import com.dvbispo.personalbudget.service.BillService;
 import com.dvbispo.personalbudget.service.TrialBalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/bills")
@@ -23,9 +25,12 @@ public class BillResource {
     private TrialBalanceService trialBalanceService;
 
     @GetMapping
-    public ResponseEntity<List<Bill>> findAll(){
+    public ResponseEntity<List<BillDTO>> findAll(){
         List<Bill> list = billService.findAll();
-        return ResponseEntity.ok().body(list);
+
+        List<BillDTO> billDTOList = list.stream().map(x -> new BillDTO(x)).collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(billDTOList);
     }
 
     @GetMapping(value = "/{id}")
@@ -34,14 +39,14 @@ public class BillResource {
         return ResponseEntity.ok().body(new BillDTO(bill));
     }
 
-    @PostMapping(value = "/{trialBalanceId}")
-    public ResponseEntity<Void> insert(@RequestBody Bill bill, @PathVariable String trialBalanceId){
+    @PostMapping
+    public ResponseEntity<BillDTO> insert(@RequestBody BillDTO billDTO){
 
-        //TODO: use fromDTO to insert a new bill;
+
+        TrialBalance trialBalance = trialBalanceService.findById(billDTO.getTrialBalanceId());
+        Bill bill = billService.fromDTO(billDTO);
 
         Bill newBill = billService.insert(bill);
-
-        TrialBalance trialBalance = trialBalanceService.findById(trialBalanceId);
 
         /* Add the new bill to the list */
         trialBalance.addBill(newBill);
@@ -51,16 +56,35 @@ public class BillResource {
         trialBalance.setTotalDebt();
         trialBalance.setBalance();
 
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(newBill.getId())
-                .toUri();
-        return ResponseEntity.created(uri).build();
+        /* Update the TrialBalance*/
+        // TODO: update the trialBalance
 
-        //TODO: create the upDate(Bill newBill) method
-        //TODO: create the delete(String id) method
+
+        return ResponseEntity.ok().body(new BillDTO(newBill));
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<BillDTO> update(@RequestBody Bill bill, @PathVariable String id){
 
+        // TODO: It is not updating
+        bill.setId(id);
+        bill = billService.update(bill);
+        return ResponseEntity.ok().body(new BillDTO(bill));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id){
+
+        // TODO: check if the bill exists
+        Bill bill = billService.findById(id);
+
+        TrialBalance trialBalance = trialBalanceService.findById(bill.getTrialBalanceId());
+
+        billService.delete(id);
+
+        /* Disconnect the Bill from its TrialBalance */
+        //trialBalance.getBills().remove(trialBalance.getBills().indexOf(bill));
+
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -7,8 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Document
@@ -30,15 +28,17 @@ public class Bill implements Serializable {
     private Double value;
     @NotNull
     private BillType billType;
+    @NotNull
+    private String trialBalanceId;
     private Boolean payed;
     private String status;
-
-    private List<String> notes = new ArrayList<>();
+    private String notes;
 
     public Bill() {
     }
 
-    public Bill(String id, String name, Integer dueYear, Integer dueMonth, Integer dueDay, Double value, BillType billType) {
+    public Bill(String id, String name, Integer dueYear, Integer dueMonth, Integer dueDay, Double value,
+                BillType billType, String trialBalanceId, String notes) {
         this.id = id;
         this.name = name;
         this.dueYear = dueYear;
@@ -46,6 +46,8 @@ public class Bill implements Serializable {
         this.dueDay = dueDay;
         this.value = value;
         this.billType = billType;
+        this.trialBalanceId = trialBalanceId;
+        this.notes = notes;
         this.payed = false;
     }
 
@@ -136,12 +138,20 @@ public class Bill implements Serializable {
         return status;
     }
 
-    public List<String> getNotes() {
+    public String getNotes() {
         return notes;
     }
 
-    public void addNotes(String note) {
-        this.notes.add(note);
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getTrialBalanceId() {
+        return trialBalanceId;
+    }
+
+    public void setTrialBalanceId(String trialBalanceId) {
+        this.trialBalanceId = trialBalanceId;
     }
 
     @Override
