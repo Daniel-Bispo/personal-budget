@@ -34,9 +34,9 @@ public class Instantiation implements CommandLineRunner {
         balancedBudgetRepository.saveAll(Arrays.asList(balancedBudget1));
         balancedBudget1 = balancedBudgetRepository.findById(balancedBudget1.getId()).get(); // id update
 
-        TrialBalance trialBalance1 = new TrialBalance(null, 2019,4);
-        TrialBalance trialBalance2 = new TrialBalance(null, 2019, 5);
-        trialBalance2.addNote("Férias na Europa");
+        TrialBalance trialBalance1 = new TrialBalance(null, 2019,4,null);
+        TrialBalance trialBalance2 = new TrialBalance(null, 2019, 5,null);
+        trialBalance2.setNote("Férias na Europa");
         trialBalanceRepository.saveAll(Arrays.asList(trialBalance1, trialBalance2));
         trialBalance1 = trialBalanceRepository.findById(trialBalance1.getId()).get(); // id update
         trialBalance2 = trialBalanceRepository.findById(trialBalance2.getId()).get(); // id update

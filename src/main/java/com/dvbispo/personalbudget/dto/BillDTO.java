@@ -18,7 +18,7 @@ public class BillDTO implements Serializable {
     private BillType billType;
     private String status;
     private String trialBalanceId;
-    private String notes;
+    private String note;
 
     public BillDTO() {
     }
@@ -33,7 +33,7 @@ public class BillDTO implements Serializable {
         this.billType = bill.getBillType();
         this.status = bill.getStatus();
         this.trialBalanceId = bill.getTrialBalanceId();
-        this.notes = bill.getNotes();
+        this.note = bill.getNote();
     }
 
     public String getId() {
@@ -72,7 +72,7 @@ public class BillDTO implements Serializable {
         return trialBalanceId;
     }
 
-    public String getNotes() {
-        return notes;
+    public String getNote() {
+        return note;
     }
 }

@@ -3,16 +3,12 @@ package com.dvbispo.personalbudget.resource;
 import com.dvbispo.personalbudget.domain.Bill;
 import com.dvbispo.personalbudget.domain.TrialBalance;
 import com.dvbispo.personalbudget.dto.BillDTO;
-import com.dvbispo.personalbudget.repository.TrialBalanceRepository;
 import com.dvbispo.personalbudget.service.BillService;
 import com.dvbispo.personalbudget.service.TrialBalanceService;
-import com.dvbispo.personalbudget.service.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +24,7 @@ public class BillResource {
     @GetMapping
     public ResponseEntity<List<BillDTO>> findAll(){
         List<Bill> list = billService.findAll();
-
         List<BillDTO> billDTOList = list.stream().map(x -> new BillDTO(x)).collect(Collectors.toList());
-
         return ResponseEntity.ok().body(billDTOList);
     }
 
@@ -43,7 +37,6 @@ public class BillResource {
     @PostMapping
     public ResponseEntity<BillDTO> insert(@RequestBody BillDTO billDTO){
 
-
         TrialBalance trialBalance = trialBalanceService.findById(billDTO.getTrialBalanceId());
         Bill bill = billService.fromDTO(billDTO);
 
@@ -52,7 +45,7 @@ public class BillResource {
         /* Add the new bill to the list */
         trialBalance.addBill(newBill);
 
-        /* Update account values */
+        /* Update Trial Balance values */
         trialBalance.setTotalCredit();
         trialBalance.setTotalDebt();
         trialBalance.setBalance();
@@ -67,7 +60,9 @@ public class BillResource {
     @PutMapping(value = "/{id}")
     public ResponseEntity<BillDTO> update(@RequestBody Bill bill, @PathVariable String id){
 
-        // TODO: It is not updating
+        /* check if the bill exists */
+        billService.findById(id);
+
         bill.setId(id);
         bill = billService.update(bill);
         return ResponseEntity.ok().body(new BillDTO(bill));
@@ -76,7 +71,7 @@ public class BillResource {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id){
 
-        // TODO: check if the bill exists
+        /* check if the bill exists */
         Bill bill = billService.findById(id);
 
         TrialBalance trialBalance = trialBalanceService.findById(bill.getTrialBalanceId());

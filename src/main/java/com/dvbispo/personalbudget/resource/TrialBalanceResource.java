@@ -2,13 +2,11 @@ package com.dvbispo.personalbudget.resource;
 
 import com.dvbispo.personalbudget.domain.TrialBalance;
 import com.dvbispo.personalbudget.dto.TrialBalanceDTO;
+import com.dvbispo.personalbudget.service.BillService;
 import com.dvbispo.personalbudget.service.TrialBalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +16,8 @@ public class TrialBalanceResource {
 
     @Autowired
     private TrialBalanceService service;
+    @Autowired
+    private BillService billService;
 
     @GetMapping
     public ResponseEntity<List<TrialBalance>> findAll(){
@@ -32,5 +32,45 @@ public class TrialBalanceResource {
         TrialBalance trialBalance = service.findById(id);
 
         return ResponseEntity.ok().body(new TrialBalanceDTO(trialBalance));
+    }
+
+    @PostMapping
+    public ResponseEntity<TrialBalance> insert(@RequestBody TrialBalance trialBalance){
+
+        /* Make sure all values are update */
+        trialBalance.setTotalDebt();
+        trialBalance.setTotalCredit();
+        trialBalance.setBalance();
+
+        TrialBalance newTrialBalance = service.insert(trialBalance);
+
+        return ResponseEntity.ok().body(newTrialBalance);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<TrialBalanceDTO> update(@RequestBody TrialBalance trialBalance, @PathVariable String id){
+
+        /* check if the bill exists */
+        service.findById(id);
+
+        trialBalance.setId(id);
+
+        trialBalance = service.update(trialBalance);
+
+        return ResponseEntity.ok().body(new TrialBalanceDTO(trialBalance));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id){
+
+        /* check if the bill exists */
+        TrialBalance trialBalance = service.findById(id);
+
+        /* delete all its bills */
+        trialBalance.getBills().forEach(x -> billService.delete(x.getId()));
+
+        service.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

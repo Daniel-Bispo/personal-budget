@@ -32,13 +32,13 @@ public class Bill implements Serializable {
     private String trialBalanceId;
     private Boolean payed;
     private String status;
-    private String notes;
+    private String note;
 
     public Bill() {
     }
 
     public Bill(String id, String name, Integer dueYear, Integer dueMonth, Integer dueDay, Double value,
-                BillType billType, String trialBalanceId, String notes) {
+                BillType billType, String trialBalanceId, String note) {
         this.id = id;
         this.name = name;
         this.dueYear = dueYear;
@@ -47,7 +47,7 @@ public class Bill implements Serializable {
         this.value = value;
         this.billType = billType;
         this.trialBalanceId = trialBalanceId;
-        this.notes = notes;
+        this.note = note;
         this.payed = false;
     }
 
@@ -138,12 +138,12 @@ public class Bill implements Serializable {
         return status;
     }
 
-    public String getNotes() {
-        return notes;
+    public String getNote() {
+        return note;
     }
 
     public void setNotes(String notes) {
-        this.notes = notes;
+        this.note = notes;
     }
 
     public String getTrialBalanceId() {

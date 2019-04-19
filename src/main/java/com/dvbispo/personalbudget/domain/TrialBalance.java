@@ -8,12 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Document
+@Document(collection = "trialbalance")
 public class TrialBalance {
 
     @Id
@@ -30,15 +29,16 @@ public class TrialBalance {
     @DBRef
     private List<Bill> bills = new ArrayList<>();
 
-    private List<String> notes = new ArrayList<>();
+    private String note;
 
     public TrialBalance() {
     }
 
-    public TrialBalance(String id, Integer year, Integer month) {
+    public TrialBalance(String id, Integer year, Integer month, String note) {
         this.id = id;
         this.year = year;
         this.month = month;
+        this.note = note;
     }
 
     public String getId() {
@@ -113,12 +113,16 @@ public class TrialBalance {
         this.bills.add(bill);
     }
 
-    public List<String> getNotes() {
-        return notes;
+    public void clearBills(){
+        this.bills.clear();
     }
 
-    public void addNote(String note) {
-        this.notes.add(note);
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     @Override

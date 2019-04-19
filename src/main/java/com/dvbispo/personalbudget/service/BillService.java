@@ -4,6 +4,7 @@ import com.dvbispo.personalbudget.domain.Bill;
 import com.dvbispo.personalbudget.dto.BillDTO;
 import com.dvbispo.personalbudget.repository.BillRepository;
 import com.dvbispo.personalbudget.repository.TrialBalanceRepository;
+import com.dvbispo.personalbudget.service.exception.NullObject;
 import com.dvbispo.personalbudget.service.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,11 @@ public class BillService {
     }
 
     public Bill insert(Bill bill){
+
+        if(bill == null){
+            throw new NullObject("Null Bill insertion!");
+        }
+
         bill.setStatus();
         return billRepository.insert(bill);
     }
@@ -42,21 +48,33 @@ public class BillService {
     public Bill update(Bill newBill){
 
         Bill oldBill = billRepository.findById(newBill.getId()).get();
-        upDateData(newBill, oldBill);
+        updateData(newBill, oldBill);
         return billRepository.save(oldBill);
     }
 
-    private void upDateData(Bill newBill, Bill oldBill){
+    public void updateAll(List<Bill> billList){
+        billList.forEach(
+                x -> {
+                    Bill oldBill = billRepository.findById(x.getId()).get();
+                    updateData(x, oldBill);
+                    billRepository.save(oldBill);
+                }
+        );
+    }
+
+    private void updateData(Bill newBill, Bill oldBill){
         oldBill.setName(newBill.getName());
         oldBill.setDueYear(newBill.getDueYear());
         oldBill.setDueMonth(newBill.getDueMonth());
         oldBill.setDueDay(newBill.getDueDay());
         oldBill.setValue(newBill.getValue());
         oldBill.setBillType(newBill.getBillType());
-        oldBill.setTrialBalanceId(newBill.getTrialBalanceId());
-        oldBill.setPayed(newBill.getPayed());
-        oldBill.setNotes(newBill.getNotes());
 
+        // TODO: check if it is necessary to change the information into the Trial Balance
+        oldBill.setTrialBalanceId(newBill.getTrialBalanceId());
+
+        oldBill.setPayed(newBill.getPayed());
+        oldBill.setNotes(newBill.getNote());
         oldBill.setStatus(); // update the status
     }
 
@@ -77,7 +95,7 @@ public class BillService {
                 billDTO.getValue(),
                 billDTO.getBillType(),
                 billDTO.getTrialBalanceId(),
-                billDTO.getNotes()
+                billDTO.getNote()
         );
 
         if(billDTO.getStatus() == null){
