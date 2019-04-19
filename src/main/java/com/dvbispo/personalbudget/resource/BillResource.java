@@ -6,6 +6,7 @@ import com.dvbispo.personalbudget.dto.BillDTO;
 import com.dvbispo.personalbudget.repository.TrialBalanceRepository;
 import com.dvbispo.personalbudget.service.BillService;
 import com.dvbispo.personalbudget.service.TrialBalanceService;
+import com.dvbispo.personalbudget.service.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -80,10 +81,15 @@ public class BillResource {
 
         TrialBalance trialBalance = trialBalanceService.findById(bill.getTrialBalanceId());
 
-        billService.delete(id);
-
         /* Disconnect the Bill from its TrialBalance */
-        //trialBalance.getBills().remove(trialBalance.getBills().indexOf(bill));
+        trialBalance.getBills().removeIf(x -> x.getId().equals(id));
+
+        /* Recalculate the balance */
+        trialBalance.setTotalDebt();
+        trialBalance.getTotalCredit();
+        trialBalance.setBalance();
+
+        billService.delete(id);
 
         return ResponseEntity.noContent().build();
     }

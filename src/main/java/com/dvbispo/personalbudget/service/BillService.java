@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BillService {
@@ -24,12 +25,13 @@ public class BillService {
 
     public Bill findById(String id){
 
-        Bill bill = billRepository.findById(id).get();
+        Optional<Bill> bill = billRepository.findById(id);
 
-        if(bill == null){
-            throw new ObjectNotFoundException("Bill not found.");
+        if(bill.isEmpty()){
+            throw new ObjectNotFoundException("Bill not found!");
         }
-        return bill;
+
+        return bill.get();
     }
 
     public Bill insert(Bill bill){
