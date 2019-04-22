@@ -40,6 +40,10 @@ public class BillResource {
         TrialBalance trialBalance = trialBalanceService.findById(billDTO.getTrialBalanceId());
         Bill bill = billService.fromDTO(billDTO);
 
+        /* set dueYear and monthYear as same as its Trial Balance */
+        bill.setDueYear(trialBalance.getYear());
+        bill.setDueMonth(trialBalance.getMonth());
+
         Bill newBill = billService.insert(bill);
 
         /* Add the new bill to the list */
@@ -49,10 +53,6 @@ public class BillResource {
         trialBalance.setTotalCredit();
         trialBalance.setTotalDebt();
         trialBalance.setBalance();
-
-        /* Update the TrialBalance*/
-        // TODO: update the trialBalance
-
 
         return ResponseEntity.ok().body(new BillDTO(newBill));
     }

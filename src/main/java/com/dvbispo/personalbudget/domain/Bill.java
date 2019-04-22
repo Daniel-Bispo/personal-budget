@@ -18,9 +18,7 @@ public class Bill implements Serializable {
     private String id;
     @NotNull
     private String name;
-    @NotNull
     private Integer dueYear;
-    @NotNull
     private Integer dueMonth;
     @NotNull
     private Integer dueDay;

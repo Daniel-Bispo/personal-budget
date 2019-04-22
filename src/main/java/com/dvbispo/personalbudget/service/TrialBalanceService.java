@@ -44,8 +44,9 @@ public class TrialBalanceService {
     }
 
     public TrialBalance update(TrialBalance newTrialBalance){
-        TrialBalance oldTrialBalance = repository.findById(newTrialBalance.getId()).get();
+        TrialBalance oldTrialBalance = findById(newTrialBalance.getId());
         updateData(newTrialBalance, oldTrialBalance);
+        updateValues(oldTrialBalance);
         return repository.save(oldTrialBalance);
     }
 
@@ -81,10 +82,14 @@ public class TrialBalanceService {
 
         trialBalanceDTO.getBills().forEach(x -> trialBalance.addBill(x));
 
+        updateValues(trialBalance);
+
+        return trialBalance;
+    }
+
+    private void updateValues(TrialBalance trialBalance){
         trialBalance.setTotalDebt();
         trialBalance.setTotalCredit();
         trialBalance.setBalance();
-
-        return trialBalance;
     }
 }

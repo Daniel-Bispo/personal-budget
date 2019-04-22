@@ -1,6 +1,7 @@
 package com.dvbispo.personalbudget.service;
 
 import com.dvbispo.personalbudget.domain.Bill;
+import com.dvbispo.personalbudget.domain.TrialBalance;
 import com.dvbispo.personalbudget.dto.BillDTO;
 import com.dvbispo.personalbudget.repository.BillRepository;
 import com.dvbispo.personalbudget.repository.TrialBalanceRepository;
@@ -9,6 +10,7 @@ import com.dvbispo.personalbudget.service.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +44,15 @@ public class BillService {
         }
 
         bill.setStatus();
-        return billRepository.insert(bill);
+        Bill newBill = billRepository.insert(bill);
+
+        /* resort the new Trial Balance */
+        TrialBalance trialBalance = trialBalanceRepository.findById(newBill.getTrialBalanceId()).get();
+        trialBalance.getBills().sort((x,y) -> Integer.compare(x.getDueDay(), y.getDueDay()));
+        trialBalance.addBill(newBill);
+        trialBalanceRepository.save(trialBalance);
+
+        return newBill;
     }
 
     public Bill update(Bill newBill){
@@ -63,19 +73,46 @@ public class BillService {
     }
 
     private void updateData(Bill newBill, Bill oldBill){
+
+        /* keep the new trial balance's year and month */
+        TrialBalance trialBalance = trialBalanceRepository.findById(newBill.getTrialBalanceId()).get();
+
         oldBill.setName(newBill.getName());
-        oldBill.setDueYear(newBill.getDueYear());
-        oldBill.setDueMonth(newBill.getDueMonth());
+        oldBill.setDueYear(trialBalance.getYear());
+        oldBill.setDueMonth(trialBalance.getMonth());
         oldBill.setDueDay(newBill.getDueDay());
         oldBill.setValue(newBill.getValue());
         oldBill.setBillType(newBill.getBillType());
 
-        // TODO: check if it is necessary to change the information into the Trial Balance
+        /* change the bill's information into the Trial Balance */
+        changeTrialBalance(newBill, oldBill);
+
+        /* change its Trial Balance */
         oldBill.setTrialBalanceId(newBill.getTrialBalanceId());
 
+        /* check if it is payed and update the status */
         oldBill.setPayed(newBill.getPayed());
+        oldBill.setStatus();
+
         oldBill.setNotes(newBill.getNote());
-        oldBill.setStatus(); // update the status
+    }
+
+    private void changeTrialBalance(Bill newBill, Bill oldBill){
+
+        TrialBalance newTrialBalance = trialBalanceRepository.findById(newBill.getTrialBalanceId()).get();
+        TrialBalance oldTrialBalance = trialBalanceRepository.findById(oldBill.getTrialBalanceId()).get();
+
+        /* remove the old bill from its old Trial Balance */
+        oldTrialBalance.getBills().removeIf(x -> x.getId().equals(oldBill.getId()));
+
+        /* insert the old bill into the its new Trial Balance */
+        newTrialBalance.addBill(oldBill);
+
+        /* resort the new Trial Balance */
+        newTrialBalance.getBills().sort((x,y) -> Integer.compare(x.getDueDay(), y.getDueDay()));
+
+        /* update both Trial Balances*/
+        trialBalanceRepository.saveAll(Arrays.asList(oldTrialBalance,newTrialBalance));
     }
 
     public void delete(String id){
