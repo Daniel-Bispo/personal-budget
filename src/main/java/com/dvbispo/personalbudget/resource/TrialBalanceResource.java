@@ -57,6 +57,9 @@ public class TrialBalanceResource {
 
         trialBalance = service.update(trialBalance);
 
+        /* change all bills's year and month if necessary */
+        billService.setAllYearAndMonth(trialBalance);
+
         return ResponseEntity.ok().body(new TrialBalanceDTO(trialBalance));
     }
 

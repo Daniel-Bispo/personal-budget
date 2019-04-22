@@ -148,4 +148,13 @@ public class BillService {
 
         return bill;
     }
+
+    public void setAllYearAndMonth(TrialBalance trialBalance){
+        trialBalance.getBills().forEach(
+                x -> {
+                    x.setDueYear(trialBalance.getYear());
+                    x.setDueMonth(trialBalance.getMonth());
+                    billRepository.save(x);
+                });
+    }
 }
